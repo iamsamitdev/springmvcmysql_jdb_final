@@ -1,8 +1,7 @@
 package com.itgenius.springmvcmysql_jdb.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -64,10 +63,17 @@ public class FrontendController {
 		return viewpath + "register";
 	}
 
+	// Get Value from application.properties
+	@Value("${api.endpoint}")
+	private String apiEndpoint;
+
 	@GetMapping(value="/users")
 	public ModelAndView users(Model model, @RequestParam(defaultValue="0") int page) {
-		int pageSize = 2;
+		int pageSize = 5;
+		// set active menu
 		model.addAttribute("userMenuActive", true);
+		// set api endpoint
+		model.addAttribute("apiEndpoint", apiEndpoint);
 		Page<User> listUser = userService.getAllUser(page, pageSize);
 		return new ModelAndView(viewpath + "user", "listUser", listUser);
 	}
